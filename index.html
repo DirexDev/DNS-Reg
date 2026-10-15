@@ -3,301 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NETp DNS Registry & Domain Manager</title>
+    <title>Nowa Karta // Konfiguracja NETp DNS</title>
     <style>
         :root {
             --bg-color: #121212;
             --card-bg: #1e1e1e;
             --border-color: #333333;
             --accent-color: #007acc;
-            --accent-hover: #0098ff;
+            --accent-hover: #1c97ea;
             --text-main: #ffffff;
             --text-muted: #a6a6a6;
-            --success-color: #107c41;
-            --error-color: #e81123;
+            --font-ui: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-mono: 'Consolas', 'Courier New', monospace;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--font-ui);
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
             display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
 
-        .container {
+        .newtab-container {
             width: 100%;
-            max-width: 800px;
+            max-width: 620px;
         }
 
-        header {
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 15px;
-            margin-bottom: 25px;
+        .header-brand {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        header h1 {
+        .header-brand h1 {
+            font-size: 28px;
+            font-weight: 300;
             margin: 0;
-            font-size: 24px;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
-        header p {
+        .header-brand h1 span {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .header-brand p {
             color: var(--text-muted);
-            margin: 5px 0 0 0;
-            font-size: 14px;
+            font-size: 13px;
+            margin-top: 6px;
         }
 
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .card h2 {
-            margin-top: 0;
-            font-size: 18px;
-            color: var(--text-main);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             color: var(--text-muted);
             font-size: 13px;
             font-weight: 600;
         }
 
-        input {
+        input, select {
             width: 100%;
-            padding: 10px 12px;
+            padding: 11px 14px;
             background-color: #0d0d0d;
             border: 1px solid var(--border-color);
             border-radius: 4px;
             color: var(--text-main);
+            font-family: var(--font-ui);
             font-size: 14px;
             box-sizing: border-box;
             outline: none;
             transition: border-color 0.2s;
         }
 
-        input:focus {
+        input:focus, select:focus {
             border-color: var(--accent-color);
         }
 
         .row {
             display: flex;
-            gap: 15px;
+            gap: 12px;
         }
 
-        .row .form-group {
-            flex: 1;
-        }
-
-        button {
+        .btn-submit {
             background-color: var(--accent-color);
             color: var(--text-main);
             border: none;
             border-radius: 4px;
-            padding: 12px 20px;
+            padding: 12px;
             font-weight: bold;
             font-size: 14px;
             cursor: pointer;
             width: 100%;
+            margin-top: 10px;
             transition: background-color 0.2s;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        button:hover {
+        .btn-submit:hover {
             background-color: var(--accent-hover);
         }
 
-        #status-msg {
-            margin-top: 12px;
-            font-size: 13px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .record-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .record-item {
-            background-color: #171717;
+        .cli-output {
+            margin-top: 20px;
+            background-color: #080808;
             border: 1px solid var(--border-color);
-            padding: 12px;
             border-radius: 4px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .record-info div:first-child {
-            font-weight: bold;
-            color: var(--accent-hover);
-        }
-
-        .record-info div:last-child {
+            padding: 12px 15px;
+            font-family: var(--font-mono);
             font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 3px;
-        }
-
-        .badge {
-            background: #252525;
-            padding: 4px 8px;
-            border-radius: 3px;
-            font-size: 11px;
-            color: var(--text-muted);
-            border: 1px solid var(--border-color);
+            color: #4af626;
+            min-height: 48px;
+            box-sizing: border-box;
+            word-break: break-all;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>NETp DNS Manager</h1>
-            <p>Globalny rejestr węzłów oraz mapowanie fizycznych adresów IP dla sieci NETp.</p>
-        </header>
+    <div class="newtab-container">
+        <div class="header-brand">
+            <h1><span>NETp</span> // Konfiguracja DNS</h1>
+            <p>Szybkie mapowanie nazw domeny na punkty wywołania ip / nazwa / plik</p>
+        </div>
 
-        <!-- Formularz dodawania wpisu -->
         <div class="card">
-            <h2>Dodaj / Aktualizuj rekord DNS</h2>
-            
             <div class="form-group">
-                <label for="dns-name">Nazwa domeny NETp:</label>
-                <input type="text" id="dns-name" placeholder="np. dns-reg@org.netp lub app@quit.netp">
+                <label for="dns-domain">Nazwa domeny NETp:</label>
+                <input type="text" id="dns-domain" placeholder="dns-reg@org.netp">
             </div>
 
             <div class="row">
-                <div class="form-group">
-                    <label for="dns-ip">Fizyczny adres IP:</label>
-                    <input type="text" id="dns-ip" placeholder="np. 185.199.110.153">
+                <div class="form-group" style="flex: 2;">
+                    <label for="dns-ip">Adres IP serwera:</label>
+                    <input type="text" id="dns-ip" placeholder="185.199.110.153">
                 </div>
-                <div class="form-group" style="max-width: 100px;">
+                <div class="form-group" style="flex: 1.2;">
+                    <label for="dns-type">Typ zasobu:</label>
+                    <select id="dns-type">
+                        <option value="Website">Website</option>
+                        <option value="StaciTree">StaciTree</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 0.8;">
                     <label for="dns-port">Port:</label>
                     <input type="text" id="dns-port" value="443">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="dns-path">Ścieżka do zasobu / pliku (np. /DNS-Reg/index.html):</label>
+                <label for="dns-path">Ścieżka zasobu (plik / nazwa):</label>
                 <input type="text" id="dns-path" placeholder="/DNS-Reg/index.html">
             </div>
 
-            <button onclick="saveDnsRecord()">Zapisz wpis w Firebase</button>
-            <div id="status-msg"></div>
-        </div>
+            <button class="btn-submit" onclick="saveConfiguration()">Zapisz trasę w Firebase</button>
 
-        <!-- Lista aktualnych wpisów w sieci -->
-        <div class="card">
-            <h2>Aktywne wpisy w rejestrze NETp</h2>
-            <ul id="dns-records-container" class="record-list">
-                <li style="color: var(--text-muted); text-align: center; padding: 10px;">Ładowanie rejestru z Firebase...</li>
-            </ul>
+            <div id="cli-output" class="cli-output">
+                > System gotowy. Wprowadź konfigurację wpisu...
+            </div>
         </div>
     </div>
 
     <script>
-        const FIREBASE_URL = "https://netp-6bb62-default-rtdb.firebaseio.com/dns";
+        const DB_URL = "https://netp-6bb62-default-rtdb.firebaseio.com/dns";
 
-        async function saveDnsRecord() {
-            let rawName = document.getElementById('dns-name').value.trim();
-            let ip = document.getElementById('dns-ip').value.trim();
-            let port = document.getElementById('dns-port').value.trim();
-            let path = document.getElementById('dns-path').value.trim();
-            let msg = document.getElementById('status-msg');
+        function logToCli(msg) {
+            document.getElementById('cli-output').innerHTML = `> ${msg}`;
+        }
 
-            if (!rawName || !ip || !port) {
-                msg.style.color = 'var(--error-color)';
-                msg.textContent = 'Błąd: Wypełnij domenę, adres IP oraz port!';
+        async function saveConfiguration() {
+            const domain = document.getElementById('dns-domain').value.trim();
+            const ip = document.getElementById('dns-ip').value.trim();
+            const type = document.getElementById('dns-type').value;
+            const port = document.getElementById('dns-port').value.trim();
+            const path = document.getElementById('dns-path').value.trim();
+
+            if (!domain || !ip || !port) {
+                logToCli("<span style='color: #e81123;'>BŁĄD: Wypełnij nazwę domeny, IP oraz port!</span>");
                 return;
             }
 
-            // Automatyczna konwersja klucza (zamiana kropek, małp i myślników na podkreślenia)
-            let domainKey = rawName.replace(/\./g, '_').replace(/@/g, '_').replace(/-/g, '_');
-            let targetUrl = `${FIREBASE_URL}/${domainKey}.json`;
+            // Standaryzacja klucza dla Firebase (kropki, małpy, myślniki na głąb gładkie podkreślenia)
+            const domainKey = domain.toLowerCase().replace(/[\.@-]/g, "_");
+            const targetPath = path ? (path.startsWith('/') ? path : '/' + path) : '/';
 
-            let recordData = {
-                ip: ip,
-                port: port,
-                path: path ? path : '/'
-            };
+            logToCli(`Wysyłanie konfiguracji dla ${domain}...`);
 
             try {
-                let response = await fetch(targetUrl, {
+                const res = await fetch(`${DB_URL}/${domainKey}.json`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(recordData)
+                    body: JSON.stringify({
+                        domain: domain,
+                        ip: ip,
+                        type: type,
+                        port: port,
+                        path: targetPath,
+                        timestamp: Date.now()
+                    })
                 });
 
-                if (response.ok) {
-                    msg.style.color = 'var(--success-color)';
-                    msg.textContent = 'Sukces! Rekord został pomyślnie zapisany w bazie.';
-                    loadDnsRecords(); // Odśwież listę
+                if (res.ok) {
+                    logToCli(`SUKCES: Zapisano trasy -> ${ip}:${port}${targetPath} (${type})`);
                 } else {
-                    msg.style.color = 'var(--error-color)';
-                    msg.textContent = 'Błąd zapisu do bazy danych.';
+                    logToCli("<span style='color: #e81123;'>BŁĄD: Odrzucono zapytanie przez Firebase.</span>");
                 }
             } catch (err) {
-                msg.style.color = 'var(--error-color)';
-                msg.textContent = 'Błąd sieci: ' + err.message;
+                logToCli("<span style='color: #e81123;'>BŁĄD SIECI: Nie można połączyć z bazą.</span>");
             }
         }
-
-        async function loadDnsRecords() {
-            let container = document.getElementById('dns-records-container');
-            
-            try {
-                let response = await fetch(`${FIREBASE_URL}.json`);
-                let data = await response.json();
-
-                if (!data) {
-                    container.innerHTML = '<li style="color: var(--text-muted); text-align: center; padding: 10px;">Brak wpisów w rejestrze.</li>';
-                    return;
-                }
-
-                container.innerHTML = '';
-                
-                for (let key in data) {
-                    let item = data[key];
-                    // Rekonstrukcja czytelnej nazwy domeny z klucza w bazie (opcjonalnie)
-                    let li = document.createElement('li');
-                    li.className = 'record-item';
-                    
-                    li.innerHTML = `
-                        <div class="record-info">
-                            <div>Klucz: ${key}</div>
-                            <div>Endpoint: ${item.ip}:${item.port} | Ścieżka: <b>${item.path || '/'}</b></div>
-                        </div>
-                        <span class="badge">Port ${item.port}</span>
-                    `;
-                    container.appendChild(li);
-                }
-            } catch (err) {
-                container.innerHTML = '<li style="color: var(--error-color); text-align: center; padding: 10px;">Nie udało się pobrać rejestru z Firebase.</li>';
-            }
-        }
-
-        // Załaduj listę rekordów po uruchomieniu strony
-        window.onload = loadDnsRecords;
     </script>
 </body>
 </html>
